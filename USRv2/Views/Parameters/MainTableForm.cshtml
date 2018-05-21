@@ -1,0 +1,55 @@
+﻿@model USRv2.Models.MainTableFormViewModel
+@{
+    ViewBag.Title = "MainTableForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>@(Model.Id != 0 ? "Редактирование существующей основной таблицы" : "Добавление новой строки основной таблицы")</h2>*@
+
+
+
+@using (Html.BeginForm("MainTableSave", "Parameters"))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainTable.PlcId)
+        @Html.DropDownListFor(m => m.MainTable.PlcId, new SelectList(Model.Plcs, "Id", "Name"), "Выберите отделение", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MainTable.PlcId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainTable.LabelId)
+        @Html.DropDownListFor(m => m.MainTable.LabelId, new SelectList(Model.Labels, "Id", "Name"), "Выберите метку", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MainTable.LabelId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainTable.TitleId)
+        @Html.DropDownListFor(m => m.MainTable.TitleId, new SelectList(Model.Titles, "Id", "Name"), "Выберите название", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MainTable.TitleId)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainTable.UnitId)
+        @Html.DropDownListFor(m => m.MainTable.UnitId, new SelectList(Model.Units, "Id", "Name"), "Выберите единицу измерения", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MainTable.UnitId)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.MainTable.IsContainer) Активировать заглушку?
+        </label>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MainTable.Container)
+        @Html.TextBoxFor(m => m.MainTable.Container, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.MainTable.Container)
+
+    </div>
+
+
+    @Html.HiddenFor(m => m.MainTable.Id)
+    @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+}
+
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

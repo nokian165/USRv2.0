@@ -1,0 +1,53 @@
+﻿@model USRv2.Models.MainTablePropertie
+@{
+    ViewBag.Title = "LimitsForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Редактирование шкал и отсечек таблицы</h2>
+
+
+
+@using (Html.BeginForm("LimitsSave", "Parameters"))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SclMax) 
+        @Html.TextBoxFor(m => m.SclMax, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.SclMax)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.SclMin)
+        @Html.TextBoxFor(m => m.SclMin, new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.SclMin)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.IsCutOffMax) Активировать отсечку максимума?
+        </label>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CutOffMax)
+        @Html.TextBoxFor(m => m.CutOffMax, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.CutOffMax)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.IsCutOffMin) Активировать отсечку минимума?
+        </label>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CutOffMin)
+        @Html.TextBoxFor(m => m.CutOffMin, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.CutOffMin)
+    </div>
+
+    @Html.HiddenFor(m => m.MainTablePropertieId)
+    @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+    }
+
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

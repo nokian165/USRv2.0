@@ -1,0 +1,38 @@
+﻿@model USRv2.Models.Plc
+@{
+    ViewBag.Title = "PlcForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id != 0 ? "Редактирование существующего отделения" : "Добавление нового отделения")</h2>
+
+
+
+@using (Html.BeginForm("PlcSave", "Parameters"))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name) 
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DepName)
+        @Html.TextBoxFor(m => m.DepName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.DepName)
+    </div>
+   /* <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.IsVisibleInMenu) Состояние переключателя отделения в меню
+        </label>
+    </div>*/
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+    }
+
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

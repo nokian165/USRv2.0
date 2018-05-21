@@ -1,24 +1,188 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
 .dl-horizontal dt {
-    white-space: normal;
+	white-space: normal;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
-    max-width: 280px;
+	max-width: 280px;
+}
+
+.field-validation-error,
+label.error { 
+	color: red;
+}
+
+.input-validation-error,
+input.error {
+	border: 2px solid red;
+}
+
+.validation-summary-errors {
+	color: red;
+}
+
+.table tbody>tr>td.vert-align{
+	vertical-align: middle;
+}
+
+/*wide of my site*/
+.container { width: 1800px !important; }
+
+/*don't rows shrinks them while being dragged*/
+.ui-sortable-helper {
+	display: table;
+}
+
+/*"Badgebox: CSS checkbox badge"*/
+.badgebox
+{
+	opacity: 0;
+}
+
+.badgebox + .badge
+{
+	/* Move the check mark away when unchecked */
+	text-indent: -999999px;
+	/* Makes the badge's width stay the same checked and unchecked */
+	width: 27px;
+}
+
+.badgebox:focus + .badge
+{
+	/* Set something to make the badge looks focused */
+	/* This really depends on the application, in my case it was: */
+	
+	/* Adding a light border */
+	box-shadow: inset 0px 0px 5px;
+	/* Taking the difference out of the padding */
+}
+
+.badgebox:checked + .badge
+{
+	/* Move the check mark back when checked */
+	text-indent: 0;
+}
+
+
+/* FOr calendar*/
+
+.calendar .day {
+	font-size: 41px;
+}
+
+.calendar .week-day {
+	font-size: 12px;
+}
+
+.calendar .month-year {
+	font-size: 12px;
+}
+
+.calendar-label {
+	padding-right: 20px;
+    padding-top: 5px;
+    margin-bottom: 0;
+}
+
+label.big {
+	font-size: 14px;
+}
+
+.calendar .calendar-icon {
+	float: right;
+	margin-top: 50px;
+	margin-right: -24px;
+	cursor: pointer;
+}
+
+.calendar {
+	background: url(../Content/Calendar/calendar_bg.png) no-repeat center left;
+	height: 80px;
+	color: #13498a;
+	padding-top: 4px;
+	width: 98px;
+	margin: 8px auto 0;
+}
+
+.correction-mode {
+	color: red;
+}
+
+.sprite40-calendar {
+	background-position: -40px -400px;
+	width: 17px;
+	height: 18px;
+}
+.sprite40-calendar-white {
+	background-position: 0 -400px;
+	width: 17px;
+	height: 18px;
+}
+
+[class^="sprite40-"], [class*=" sprite40-"] {
+	background-image: url(../Content/Calendar/sprite_40.png?240);
+	background-repeat: no-repeat;
+	width: 40px;
+	height: 40px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.row {
+	margin-right: -15px;
+	margin-left: -15px;
+}
+
+.calendar .week-day, .calendar .day, .calendar .month-year {
+	width: 80px;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	line-height: 1em;
+}
+
+
+.datepickers-container {
+	position: fixed !important;
+	top: 160px !important;
+	left: 1590px !important;
+}
+
+.HideTrTh {
+	display: none;
+}
+.OutOfView {
+    background-color: rgb(275,218,252);  /*gb(230,50,68)*/
+}
+.disable-2nd-calendar {
+	pointer-events:none;
+}
+
+.font-arial {
+	font-family: arial;
+}
+
+.navbar .brand, .navbar .nav > li.admin-color > a {
+    color: #FAE7B5;
+}
+
+.navbar .brand, .navbar .nav > li.admin-color > a:hover {
+    color: #fff;
 }

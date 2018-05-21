@@ -1,0 +1,66 @@
+﻿@model IEnumerable<USRv2.Models.Title>
+
+@{
+    ViewBag.Title = "Параметры";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Перечень используемых названий параметров</h2>
+
+@using (Html.BeginForm("TitleNew", "Parameters"))
+{
+    <button class="btn btn-warning">Добавить</button>
+
+}<br />
+
+<table id="titles" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">Название параметра</th>
+            <th class="text-center">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Names in Model)
+        {
+            <tr>
+                <td>@Names.Name</td>
+                <td class="text-center">
+                    @Html.ActionLink("Изменить", "TitleEdit", "Parameters", new { id = Names.Id }, new { @class = "btn btn-info btn-xs" })
+                    <button class='btn btn-primary btn-xs js-delete' data-title-id="@Names.Id" name-title-id="@Names.Name">Удалить</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#titles").on("click", ".js-delete", function () {
+                var button = $(this);
+                // console.log(button);
+                bootbox.confirm("Вы действительно хотите удалить название параметра '" + button.attr("name-title-id") + "'?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/titles/" + button.attr("data-title-id"),
+                            method: "DELETE",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Удалено");
+                                //button.parents("tr").remove();  http://datatables.net
+                            },
+                            error: function () {
+                                toastr.error("Вы не можете удалить название параметра '" + button.attr("name-title-id") + "', т.к. оно используется в Главной таблице!");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

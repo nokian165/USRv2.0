@@ -44,6 +44,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.1.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.0.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.0.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.0.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.0.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.0.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.0.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -52,12 +84,24 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -165,33 +209,211 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\GetAnSingerAlbumsController.cs" />
+    <Compile Include="Controllers\Api\LabelsController.cs" />
+    <Compile Include="Controllers\Api\MainTableController.cs" />
+    <Compile Include="Controllers\Api\ModalTrendController.cs" />
+    <Compile Include="Controllers\Api\PlcsController.cs" />
+    <Compile Include="Controllers\Api\TitlesController.cs" />
+    <Compile Include="Controllers\Api\UnitsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ParametersController.cs" />
+    <Compile Include="Dtos\ChangeCheckboxStateDto.cs" />
+    <Compile Include="Dtos\ChangeRowsTableDto.cs" />
+    <Compile Include="Dtos\MoveTagOutOfViewDto.cs" />
+    <Compile Include="Dtos\TrendDataDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707031659363_initial.cs" />
+    <Compile Include="Migrations\201707031659363_initial.Designer.cs">
+      <DependentUpon>201707031659363_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707031822511_add-all-models.cs" />
+    <Compile Include="Migrations\201707031822511_add-all-models.Designer.cs">
+      <DependentUpon>201707031822511_add-all-models.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707051910065_seedDataBase.cs" />
+    <Compile Include="Migrations\201707051910065_seedDataBase.Designer.cs">
+      <DependentUpon>201707051910065_seedDataBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802270609393_add-api-tesr.cs" />
+    <Compile Include="Migrations\201802270609393_add-api-tesr.Designer.cs">
+      <DependentUpon>201802270609393_add-api-tesr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201802270752026_add-api-tesr23.cs" />
+    <Compile Include="Migrations\201802270752026_add-api-tesr23.Designer.cs">
+      <DependentUpon>201802270752026_add-api-tesr23.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Album.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Label.cs" />
+    <Compile Include="Models\LimitationTagPropertiesCutOffMax.cs" />
+    <Compile Include="Models\LimitationTagPropertiesCutOffMin.cs" />
+    <Compile Include="Models\LimitationTagPropertiesSclMax.cs" />
+    <Compile Include="Models\LimitationTagPropertiesSclMin.cs" />
+    <Compile Include="Models\MainTable.cs" />
+    <Compile Include="Models\MainTableFormViewModel.cs" />
+    <Compile Include="Models\MainTablePropertie.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MinNameIfIsContainer.cs" />
+    <Compile Include="Models\NumericSampleAverage.cs" />
+    <Compile Include="Models\NumericSampleRandom.cs" />
+    <Compile Include="Models\NumericSamples.cs" />
+    <Compile Include="Models\Plc.cs" />
+    <Compile Include="Models\Quality.cs" />
+    <Compile Include="Models\RoleName.cs" />
+    <Compile Include="Models\Singer.cs" />
+    <Compile Include="Models\Title.cs" />
+    <Compile Include="Models\Unit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MainTableViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-myTheme.css" />
+    <Content Include="Content\bootstrap-simplex.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Calendar\calendar_bg.png" />
+    <Content Include="Content\Calendar\sprite_40.png" />
+    <Content Include="Content\datepicker.css" />
+    <Content Include="Content\datepicker.min.css" />
+    <Content Include="Content\images\dragIcon.gif" />
+    <Content Include="Content\images\dragIconBlack.gif" />
+    <Content Include="Content\images\dragIconH.gif" />
+    <Content Include="Content\images\dragIconHBlack.gif" />
+    <Content Include="Content\images\dragIconRectBig.png" />
+    <Content Include="Content\images\dragIconRectBig.svg" />
+    <Content Include="Content\images\dragIconRectBigBlack.png" />
+    <Content Include="Content\images\dragIconRectBigBlack.svg" />
+    <Content Include="Content\images\dragIconRectBigBlackH.png" />
+    <Content Include="Content\images\dragIconRectBigBlackH.svg" />
+    <Content Include="Content\images\dragIconRectBigH.png" />
+    <Content Include="Content\images\dragIconRectBigH.svg" />
+    <Content Include="Content\images\dragIconRectSmall.png" />
+    <Content Include="Content\images\dragIconRectSmall.svg" />
+    <Content Include="Content\images\dragIconRectSmallBlack.png" />
+    <Content Include="Content\images\dragIconRectSmallBlack.svg" />
+    <Content Include="Content\images\dragIconRectSmallBlackH.png" />
+    <Content Include="Content\images\dragIconRectSmallBlackH.svg" />
+    <Content Include="Content\images\dragIconRectSmallH.png" />
+    <Content Include="Content\images\dragIconRectSmallH.svg" />
+    <Content Include="Content\images\dragIconRoundBig.png" />
+    <Content Include="Content\images\dragIconRoundBig.svg" />
+    <Content Include="Content\images\dragIconRoundBigBlack.png" />
+    <Content Include="Content\images\dragIconRoundBigBlack.svg" />
+    <Content Include="Content\images\dragIconRoundBigBlackH.png" />
+    <Content Include="Content\images\dragIconRoundBigBlackH.svg" />
+    <Content Include="Content\images\dragIconRoundBigH.png" />
+    <Content Include="Content\images\dragIconRoundBigH.svg" />
+    <Content Include="Content\images\dragIconRoundSmall.png" />
+    <Content Include="Content\images\dragIconRoundSmall.svg" />
+    <Content Include="Content\images\dragIconRoundSmallBlack.png" />
+    <Content Include="Content\images\dragIconRoundSmallBlack.svg" />
+    <Content Include="Content\images\dragIconRoundSmallBlackH.png" />
+    <Content Include="Content\images\dragIconRoundSmallBlackH.svg" />
+    <Content Include="Content\images\dragIconRoundSmallH.png" />
+    <Content Include="Content\images\dragIconRoundSmallH.svg" />
+    <Content Include="Content\images\eraserIcon.svg" />
+    <Content Include="Content\images\eraserIconH.svg" />
+    <Content Include="Content\images\export.png" />
+    <Content Include="Content\images\exportWhite.png" />
+    <Content Include="Content\images\lens.png" />
+    <Content Include="Content\images\lens.svg" />
+    <Content Include="Content\images\lensWhite.png" />
+    <Content Include="Content\images\lensWhite.svg" />
+    <Content Include="Content\images\lensWhite_old.png" />
+    <Content Include="Content\images\lens_old.png" />
+    <Content Include="Content\images\pencilIcon.svg" />
+    <Content Include="Content\images\pencilIconH.svg" />
+    <Content Include="Content\images\xIcon.svg" />
+    <Content Include="Content\images\xIconH.svg" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="pager\first.png" />
+    <Content Include="pager\last.png" />
+    <Content Include="pager\next.png" />
+    <Content Include="pager\pager.css" />
+    <Content Include="pager\prev.png" />
+    <Content Include="Scripts\ai.0.22.9-build00167.js" />
+    <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
+    <Content Include="Scripts\amcharts.js" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
+    <Content Include="Scripts\dataloader.min.js" />
+    <Content Include="Scripts\datepicker.js" />
+    <Content Include="Scripts\datepicker.min.js" />
+    <None Include="Properties\PublishProfiles\myPublish.pubxml" />
+    <None Include="Scripts\jquery-1.12.4.intellisense.js" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.tablesorter.min.js" />
+    <Content Include="Scripts\jquery.tablesorter.pager.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -199,7 +421,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\serial.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="sorter\asc.gif" />
+    <Content Include="sorter\bg.gif" />
+    <Content Include="sorter\desc.gif" />
+    <Content Include="sorter\style.css" />
+    <Content Include="tablesorter.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -234,6 +464,21 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Parameters\DayReport.cshtml" />
+    <Content Include="Views\Parameters\LabelForm.cshtml" />
+    <Content Include="Views\Parameters\Labels.cshtml" />
+    <Content Include="Views\Parameters\Limits.cshtml" />
+    <Content Include="Views\Parameters\LimitsForm.cshtml" />
+    <Content Include="Views\Parameters\MainTable.cshtml" />
+    <Content Include="Views\Parameters\MainTableForm.cshtml" />
+    <Content Include="Views\Parameters\PlcForm.cshtml" />
+    <Content Include="Views\Parameters\Plcs.cshtml" />
+    <Content Include="Views\Parameters\RandomReport.cshtml" />
+    <Content Include="Views\Parameters\TitleForm.cshtml" />
+    <Content Include="Views\Parameters\Titles.cshtml" />
+    <Content Include="Views\Parameters\UnitForm.cshtml" />
+    <Content Include="Views\Parameters\Units.cshtml" />
+    <Content Include="Views\Shared\_NavBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -244,7 +489,23 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201707031659363_initial.resx">
+      <DependentUpon>201707031659363_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707031822511_add-all-models.resx">
+      <DependentUpon>201707031822511_add-all-models.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707051910065_seedDataBase.resx">
+      <DependentUpon>201707051910065_seedDataBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802270609393_add-api-tesr.resx">
+      <DependentUpon>201802270609393_add-api-tesr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802270752026_add-api-tesr23.resx">
+      <DependentUpon>201802270752026_add-api-tesr23.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -264,7 +525,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2820</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2820/</IISUrl>
+          <IISUrl>http://localhost:40/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

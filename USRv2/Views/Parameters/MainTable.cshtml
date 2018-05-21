@@ -1,0 +1,216 @@
+﻿@model IEnumerable<USRv2.Models.MainTable>
+
+@{
+    ViewBag.Title = "Главная таблица";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Настройка основной таблицы технологических параметров</h2>
+
+@using (Html.BeginForm("MainTableNew", "Parameters"))
+{
+    <button class="btn btn-warning">Добавить</button>
+
+}<br />
+
+<table id="mainTables" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">id тега</th>
+            <th class="text-center">Отделение</th>
+            <th class="text-center">Метка</th>
+            <th class="text-center">Параметр</th>
+            <th class="text-center">Ед.изм.</th>
+            <th class="text-center">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var names in Model.OrderBy(m => m.IdAsc))
+        {
+            if (!names.IsContainer)
+            {
+                <tr id="@names.Id" class="@(names.IsOutOfView == true ? "OutOfView" : "")">
+                    <td class="vert-align text-center col-md-1">@names.Id</td>
+                    <td class="vert-align text-center col-md-1">@names.Plc.Name</td>
+                    <td class="vert-align text-center col-md-1">@names.Label.Name</td>
+                    <td class="col-md-3">@names.Title.Name</td>
+                    <td class="vert-align text-center col-md-1">@names.Unit.Name</td>
+                    <td class="text-center col-md-2">
+                        @Html.ActionLink("Изменить", "MainTableEdit", "Parameters", new { id = names.Id }, new { @class = "btn btn-info btn-xs" })
+                        <button class='btn btn-default btn-xs js-toggle' data-mainTable-id="@names.Id" data-mainTable-isOutOfView="@(names.IsOutOfView == true ? "true" : "false")">@(names.IsOutOfView == true ? "Показать" : "Скрыть")</button>
+                        <button class='btn btn-danger btn-xs js-delete' data-mainTable-id="@names.Id">Удалить</button>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr id="@names.Id" class="@(names.IsOutOfView == true ? "OutOfView" : "")">
+                    <td class="vert-align text-center col-md-1">@names.Id</td>
+                    <td class="vert-align text-center col-md-1">@names.Plc.Name</td>
+                    <td colspan="3" class="text-center col-md-7"><b>@names.Container</b></td>
+                    <td class="text-center col-md-2">
+                        @Html.ActionLink("Изменить", "MainTableEdit", "Parameters", new { id = names.Id }, new { @class = "btn btn-info btn-xs" })
+                        <button class='btn btn-default btn-xs js-toggle' data-mainTable-id="@names.Id" data-mainTable-isOutOfView="@(names.IsOutOfView == true ? "true" : "false")">@(names.IsOutOfView == true ? "Показать" : "Скрыть")</button>
+                        <button class='btn btn-danger btn-xs js-delete' data-mainTable-id="@names.Id">Удалить</button>
+                    </td>
+                </tr>
+            }
+
+
+        }
+
+    </tbody>
+
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            /*   $('tbody').sortable({
+                   beforeStop: function (event, ui) {
+                       //alert("received [" + ui.sender.context.id + "]");
+                       //alert("received [" + ui.item.html() + "]");
+                      // works alert("received [" + $(this).attr('id') + "]");
+                       // $(this).closest('.balga').attr('id')
+                       alert("received [" + ui.item[0].nextElementSibling + "]");
+
+
+                   }
+               }).disableSelection();*/
+
+
+            var vm = {
+                rowsIds:[]
+            }
+
+
+
+
+            $('tbody').sortable({
+
+                axis: "y",
+                delay: 150,
+                distance: 5,
+
+
+                start: function (event, ui) {
+                   //14-06-2017 убрал startElement = $(ui.item) //для вывода в консоль объекта object уже из которого мона вытянуть нужное свойство
+                    //console.log(startElement);
+                    //    vm.rowsIds.push($('tbody').sortable("toArray"));   ЗАгрнать номер строк таблицы в массив
+                },
+       @*           beforeStop: function (event, ui) {
+                    var test = $(this)
+                    if (Math.abs(ui.originalPosition.top - ui.position.top) > 60)
+                    {
+                        toastr.error("Вы не можете перемещать строку таблицы более чем на одну позицию!")
+                        $('tbody').sortable("cancel");
+
+                    }
+
+
+                },
+     *@           update: function (event, ui) {
+                // console.log($('tbody').sortable("toArray"));
+           var button = $(this);
+           vm.rowsIds.push.apply(vm.rowsIds, $('tbody').sortable("toArray"));
+           //     vm.rowsIds.($('tbody').sortable("toArray"));
+                console.log(vm);
+                //WORK alert(button.children('tr').attr('id-tr'));   но берет только первый элемент tr таблицы. ВСЕГДА!!! (((
+                //WORK alert($(ui.item).html()); для проверки что внутри
+                // console.log(startElement); //для вывода в консоль объекта object уже из которого мона вытянуть нужное свойство
+                @*         if ((ui.originalPosition.top - ui.position.top) > 0)
+                    //           console.log("Которую тащу " + startElement.children().context.id + "Которая пошла взамен " + $(ui.item).next().attr('id'));
+                    {
+                        vm.rowsIds.push(startElement.children().context.id);
+                        vm.rowsIds.push($(ui.item).next().attr('id'));
+
+                    }
+
+                else
+                {
+                                   vm.rowsIds.push(startElement.children().context.id);
+                    vm.rowsIds.push($(ui.item).prev().attr('id'));
+                }
+                    console.log(vm);
+*@
+
+                    $.ajax({
+                            url: "/api/mainTable",
+                            method: "POST",
+                            data: vm
+                        })
+                        .done(function() {
+                            //toastr.success("Успешно");
+                            vm = {
+                                rowsIds: []
+                            };
+
+
+                        });
+
+
+                    //          console.log("Которую тащу " + startElement.children().context.id + "Которая пошла взамен " + $(ui.item).prev().attr('id'));
+                    //console.log(vm);
+                }
+        }).disableSelection();
+
+
+
+        $("#mainTables").on("click", ".js-delete", function () {
+            var button = $(this);
+            bootbox.confirm("Вы действительно хотите удалить параметр с id тега=" + button.attr("data-mainTable-id") + "? Внимание!!! Все архивные значения тега будут удалены из базы данных.", function (result) {
+                if (result) {
+                    $.ajax({
+                        url: "/api/mainTable/" + button.attr("data-mainTable-id"),
+                        method: "DELETE",
+                        success: function () {
+                            button.parents("tr").remove();
+                            toastr.success("Удалено");
+                            //button.parents("tr").remove();  http://datatables.net
+                        }
+                    });
+                }
+            });
+        });
+
+            $("#mainTables").on("click", ".js-toggle", function () {
+                var button = $(this);
+                var vm = {};
+                if (button.attr("data-mainTable-isOutOfView") === "true")
+                    vm = { IsOutOfView: false };
+                else
+                    vm = { IsOutOfView: true };
+               
+                bootbox.confirm("Вы действительно хотите " + ($(button).text() === 'Показать' ? 'показать' : 'скрыть') + " параметр с id тега=" + button.attr("data-mainTable-id") + " в таблицах отчетов?", function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/mainTable/" + button.attr("data-mainTable-id"),
+                                    method: "PUT",
+                                    data: vm,
+                                    success: function () {
+                                       // $(button).toggleClass(button.attr("data-mainTable-isOutOfView"), addOrRemove);
+                                        // $(button).toggleClass("data-mainTable-isOutOfView");
+
+                                        //Заменить значение data-mainTable-isOutOfView для последующего toggle
+                                        $(button).attr('data-mainTable-isOutOfView', ($(button).attr('data-mainTable-isOutOfView') === 'false' ? 'true' : 'false'));
+                                        // Заменить текст кнопки Скрыть/Показать
+                                        $(button).html(($(button).text() === 'Показать' ? 'Скрыть' : 'Показать'));
+                                        // Заменить класс строки tr
+                                        $(button).parent().parent().toggleClass("OutOfView");
+
+                                        toastr.success("Успешно");
+                                    }
+                                });
+                            }
+                        });
+            });
+        });
+
+    </script>
+}
+
+
+
+

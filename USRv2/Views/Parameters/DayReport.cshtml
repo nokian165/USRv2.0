@@ -1,0 +1,378 @@
+﻿@model USRv2.ViewModels.MainTableViewModel
+
+
+@{
+    ViewBag.Title = "Суточный отчет";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div class="row">
+    
+    <div class="col-sm-10">
+        <h2>Суточный отчет</h2> <br><br>
+        @{int i = 0;
+            @:<div id="depCheckboxes">
+            foreach (var names in Model.Plcs)
+            {
+                i++;
+                @:<label class="checkbox-inline">
+                    @:<input id="inp-@i" class="js-change" plcId="@names.Id" depName="tr.@names.DepName " type="checkbox" @(names.IsVisibleInMenu == true ? "checked" : "")> @names.Name
+                    @:</label>
+            }
+            @:</div>
+            <p id="quantityOfCheckboxes" hidden>@i</p>
+        }
+    </div>
+
+    <div class="col-sm-1 text-center">
+        <label class="big calendar-label">Период с</label>
+        <div class="calendar">
+            <input type="hidden" id="one-datepicker">
+            <div class="sprite40-calendar calendar-icon showDatepicker" ></div>
+            <div class="week-day">08:00:00</div>
+            <div class="day">@ViewBag.StartDay</div>
+            <div class="month-year">@ViewBag.StartMonthYear</div>
+        </div>
+    </div>
+    <div class="col-sm-1 text-center">
+        <label class="big calendar-label">Период по</label>
+        <div class="calendar">
+            <div class="week-day">08:00:00</div>
+            <div class="day">@ViewBag.EndDay</div>
+            <div class="month-year">@ViewBag.EndMonthYear</div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<p class="text-center toggle">Смена №1</p>
+<table id="mainTables" class="table table-bordered table-hover table-condensed">
+    <thead>
+    <tr>
+        <th class="text-center">Параметр</th>
+        <th class="text-center">08:00-09:00</th>
+        <th class="text-center">09:00-10:00</th>
+        <th class="text-center">10:00-11:00</th>
+        <th class="text-center">11:00-12:00</th>
+        <th class="text-center">12:00-13:00</th>
+        <th class="text-center">13:00-14:00</th>
+        <th class="text-center">14:00-15:00</th>
+        <th class="text-center">15:00-16:00</th>
+        <th class="text-center">16:00-17:00</th>
+        <th class="text-center">17:00-18:00</th>
+        <th class="text-center">18:00-19:00</th>
+        <th class="text-center">19:00-20:00</th>
+        <th class="text-center for-hide">Средн.</th>
+        <th class="text-center for-hide">Сумм.</th>
+        <th class="text-center for-hide HideTrTh">Мин.</th>
+        <th class="text-center for-hide HideTrTh">Макс.</th>
+    </tr>
+    </thead>
+    <tbody style="display: none">
+    @foreach (var names in Model.MainTables.OrderBy(m => m.IdAsc))
+    {
+        if(!names.IsOutOfView)
+        { 
+            if (!names.IsContainer)
+            {
+                <tr class="@names.Plc.DepName for-modal" 
+                    data-mainTable-id="@names.Id" 
+                    data-min="@names.MainTablePropertie.SclMin"
+                    data-max="@names.MainTablePropertie.SclMax"
+                    data-cutOffMax="@names.MainTablePropertie.CutOffMax"
+                    data-cutOffMin="@names.MainTablePropertie.CutOffMin">
+                    @*<td class="col-md-4">@names.Id</td>*@ <td class="col-md-4">@names.Plc.DepName-@names.Label.Name @names.Title.Name, @names.Unit.Name</td>
+                    @foreach (var nameData in Model.NumericSampleAverages)
+                    {
+                        if (nameData.Id == names.Id)
+                        {
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average8)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average9)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average10)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average11)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average12)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average13)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average14)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average15)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average16)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average17)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average18)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average19)) }</td>
+                            <td class="vert-align text-center for-hide">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average8Till20)) }</td>
+                            <td class="vert-align text-center for-hide">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Sum8Till20)) }</td>
+                            <td class="vert-align text-center for-hide HideTrTh">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Minimum8Till20)) }</td>
+                            <td class="vert-align text-center for-hide HideTrTh">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Maximum8Till20)) }</td>
+                        }
+                    }
+                </tr>
+            }
+            else
+            {
+                <tr class="@names.Plc.DepName" >
+                    <td colspan="15" class="text-center"><b>@names.Container</b></td>
+                </tr>
+            }
+        }
+
+    }
+                    
+    @*           @foreach (var names in Model.NumericSampleAverages)
+        {
+    //        @Model.NumericSamples.IndexOf(names);
+            <tr>@names.Id</tr>
+            <tr>@names.Average8Till9</tr>
+                        // <tr> @names.2</tr>
+                    } *@            
+
+    @*    @Model.NumericSamples*@
+    @*     @foreach (var names in Model.NumericSamples)
+        {
+            @Model.NumericSamples.IndexOf(names);
+     <tr>@names</tr>
+    // <tr> @names.2</tr>
+    }*@
+    </tbody>
+</table>
+<p class="text-center toggle">Смена №2</p>
+<table id="mainTables2" class="table table-bordered table-hover table-condensed">
+    <thead>
+    <tr>
+        <th class="text-center">Параметр</th>
+        <th class="text-center">20:00-21:00</th>
+        <th class="text-center">21:00-22:00</th>
+        <th class="text-center">22:00-23:00</th>
+        <th class="text-center">23:00-00:00</th>
+        <th class="text-center">00:00-01:00</th>
+        <th class="text-center">01:00-02:00</th>
+        <th class="text-center">02:00-03:00</th>
+        <th class="text-center">03:00-04:00</th>
+        <th class="text-center">04:00-05:00</th>
+        <th class="text-center">05:00-06:00</th>
+        <th class="text-center">06:00-07:00</th>
+        <th class="text-center">07:00-08:00</th>
+        <th class="text-center for-hide">Средн.</th>
+        <th class="text-center for-hide">Сумм.</th>
+        <th class="text-center for-hide HideTrTh">Мин.</th>
+        <th class="text-center for-hide HideTrTh">Макс.</th>
+    </tr>
+    </thead>
+    <tbody style="display: none">
+    @foreach (var names in Model.MainTables.OrderBy(m => m.IdAsc))
+    {
+        if (!names.IsOutOfView)
+        {
+            if (!names.IsContainer)
+            {
+                <tr class="@names.Plc.DepName for-modal"                     
+                    data-mainTable-id="@names.Id" 
+                    data-min="@names.MainTablePropertie.SclMin"
+                    data-max="@names.MainTablePropertie.SclMax"
+                    data-cutOffMax="@names.MainTablePropertie.CutOffMax"
+                    data-cutOffMin="@names.MainTablePropertie.CutOffMin">
+                    <td class="col-md-4 for-modal">@names.Plc.DepName-@names.Label.Name @names.Title.Name, @names.Unit.Name</td> 
+                    @foreach (var nameData in Model.NumericSampleAverages)
+                    {
+                        if (nameData.Id == names.Id) { 
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average20)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average21)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average22)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average23)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average0)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average1)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average2)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average3)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average4)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average5)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average6)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average7)) }</td>
+                            <td class="vert-align text-center for-hide">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Average20Till8)) }</td>
+                            <td class="vert-align text-center for-hide">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Sum20Till8)) }</td>
+                            <td class="vert-align text-center for-hide HideTrTh">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Minimum20Till8)) }</td>
+                            <td class="vert-align text-center for-hide HideTrTh">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.Maximum20Till8)) }</td>
+                        }
+                    }
+                </tr>
+            }
+            else
+            {
+                <tr class="@names.Plc.DepName">
+                    <td colspan="15" class="text-center"><b>@names.Container</b></td>
+                </tr>
+            }
+        }
+    }
+
+    </tbody>
+</table>
+
+
+<!-- Modal hidden -->
+<div id="basicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <div class="modal-title" id="myModalLabel">
+                    <div class="h4 font-arial" id="name-from-tr-row"></div>
+                </div>		
+            </div>	
+            <div class="modal-body">
+                <div id="chartdiv" style="width: 100%; height: 600px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+
+        $(document).ready(function() {
+
+            // сортировка в таблицах (нажатие по шапке таблицы)
+            $("#mainTables").tablesorter();
+            $("#mainTables2").tablesorter();
+
+
+            // Передача названия параметра в модальное окно по нажатию на любую строку таблицы
+            $("tr.for-modal").on("click", function () {
+                    var tr = $(this);
+                var trElement = $(this), timeStart, timeEnd, dayStart, dayEnd, monthYearStart, monthYearEnd, tagId;
+                  //  if ($(trElement).children("td:first").text())
+                        $("#name-from-tr-row").html($(trElement).children("td:first").text());
+
+            // сборка строки запроса AJAX
+            tagId = tr.attr("data-mainTable-id");
+            timeStart = $("div.week-day:first").text();
+            timeEnd = $("div.week-day:last").text();
+            dayStart = ("0" + $("div.day:first").text()).slice(-2);
+            dayEnd = ("0" + $("div.day:last").text()).slice(-2);
+            monthYearStart = $("div.month-year:first").text();
+            monthYearEnd = $("div.month-year:last").text();
+
+            //очистка переменных старого модального окна при открытии нового модального окна
+            var originalModal = $('#basicModal').clone();
+            $("#basicModal").on("hidden.bs.modal", function () {
+                $('#basicModal').remove();
+                var myClone = originalModal.clone();
+                $('body').append(myClone);
+            });
+
+            // открытие тренда в модальном окне
+            $("#basicModal").modal('show').on('shown.bs.modal',
+                function () {
+                        AmCharts.makeChart("chartdiv",
+                            {
+                                "type": "serial",
+                                "dataLoader": {
+                                    "url": "/api/ModalTrend/?id=" + tagId + "&dtDateStart=" + dayStart + "." + monthYearStart + "%20" + timeStart + "&dtDateEnd=" + dayEnd + "." + monthYearEnd + "%20" + timeEnd,
+                                    "format": "json"
+                                },
+                                "pathToImages": "/Content/images/", 
+                                "graphs": [{
+                                    "bullet": "none",
+                                    "bulletSize": 1,
+                                    "lineColor": "#d1655d",
+                                    "lineThickness": 2,
+                                    "type": "smoothedLine",
+                                    "valueField": "sampleValue"
+                                }],
+                                "chartCursor":
+                                {
+                                    "categoryBalloonDateFormat": "JJ:NN DD.MM.YYYY ",
+                                    "cursorPosition": "mouse"
+                                },
+                                "categoryField": "sampleDateTime",
+                                "categoryAxis": {
+                                    "minPeriod": "mm",
+                                    "parseDates": true
+                                },
+                                "valueAxes": [
+                                    {
+                                        "maximum": tr.attr("data-max"),
+                                        "minimum": tr.attr("data-min")
+                                    }
+                                ],
+                                "guides": [
+                                    {
+                                        "dashLength": 4,
+                                        "fillAlpha": 0.02,
+                                        "value": tr.attr("data-cutOffMin"),
+                                        "toValue": tr.attr("data-cutOffMax"),
+                                        "lineAlpha": 0.8
+
+                                    }
+                                ]
+                            });
+                });
+        });
+
+        // таблицы datatables - пригодится для жернала действий оператора
+        /*  $("#mainTables").DataTable({
+            ordering: false,
+            paging: false
+            });*/
+        //$("#mainTables2").DataTable();
+
+
+        //отображение чекбоксов с названиями отделений
+        for (var i = 1; i <= $("#quantityOfCheckboxes").text(); i++) {
+            if (!$("#inp-" + i).prop("checked")) {
+                var rowsToHide = $("tbody").children($("#inp-" + i).attr("depName"));
+                $(rowsToHide).hide();
+            }
+        }
+        $("tbody").show();
+        var vm = {};
+
+        // сохранение состояний чекбоксов в базе данных
+        $("#depCheckboxes").on("click",
+            ".js-change",
+            function() {
+                var input = $(this);
+                var hz = $("tbody").children(input.attr("depName"));
+                vm =
+                {
+                    IsVisibleInMenu: input.prop("checked")
+                }; // запись вайл или тру в зависимости от состояние переключателдя
+                //console.log(vm);
+                $.ajax({
+                    url: "/api/plcs/" + input.attr("plcId"),
+                    method: "PUT",
+                    data: vm,
+                    success: function() {
+                        $(hz).toggle();
+                    }
+                });
+            });
+
+        // смена мин, макс <---> среднее суммарное в таблицах
+        $("p.toggle").on("click",
+            function() {
+                $("tbody").children().children("td.for-hide").toggleClass("HideTrTh");
+                $("thead").children().children("th.for-hide").toggleClass("HideTrTh");
+
+            });
+
+        // календарь выбора
+        $('#one-datepicker').datepicker({
+            onSelect: function(formattedDate) {
+                window.location = "/?dtDate=" + formattedDate;
+            }
+        });
+
+        var dp = $('#one-datepicker').datepicker().data('datepicker');
+
+        $(".showDatepicker").on("click",
+            function() {
+                dp.show();
+            });
+    });
+    </script>
+}

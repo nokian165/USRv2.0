@@ -1,0 +1,57 @@
+﻿@model IEnumerable<USRv2.Models.MainTablePropertie>
+
+@{
+    ViewBag.Title = "Пределы";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Настройка шкал и отсечек технологических параметров</h2>
+
+<br />
+
+<table id="plcs" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th class="text-center">id тега</th>
+        <th class="text-center">Параметр</th>
+        <th class="text-center">Максимум шкалы</th>
+        <th class="text-center">Минимум шкалы</th>
+        <th class="text-center">Отсечка максимума</th>
+        <th class="text-center">Значение отсечки</th>
+        <th class="text-center">Отсечка минимума</th>
+        <th class="text-center">Значение отсечки</th>
+        <th class="text-center">Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var names in Model.OrderBy(m => m.MainTable.IdAsc))
+    {
+        // if (!names.MainTable.IsOutOfView)
+        // {
+        if (!names.MainTable.IsContainer)
+        {
+            <tr class="@(names.MainTable.IsOutOfView == true ? "OutOfView" : "")">
+                <td class="vert-align text-center">@names.MainTablePropertieId</td>
+                <td class="col-md-3">@names.MainTable.Title.Name</td>
+                <td class="vert-align text-center">@names.SclMax</td>
+                <td class="vert-align text-center">@names.SclMin</td>
+                <td class="vert-align text-center">@(names.IsCutOffMax == true ? "Включена" : "Отключена")</td>
+                <td class="vert-align text-center">@names.CutOffMax</td>
+                <td class="vert-align text-center">@(names.IsCutOffMin == true ? "Включена" : "Отключена")</td>
+                <td class="vert-align text-center">@names.CutOffMin</td>
+                <td class="text-center">
+                    @Html.ActionLink("Изменить", "LimitsEdit", "Parameters", new {id = names.MainTablePropertieId}, new {@class = "btn btn-info btn-xs"})
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr class="@(names.MainTable.IsOutOfView == true ? "OutOfView" : "")">
+                <td colspan="9" class="text-center"><b>@names.MainTable.Container</b></td>
+            </tr>
+        }
+        //}
+    }
+
+    </tbody>
+</table>

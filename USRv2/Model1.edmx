@@ -1,0 +1,550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Labels">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MainTableProperties">
+          <Key>
+            <PropertyRef Name="MainTablePropertieId" />
+          </Key>
+          <Property Name="MainTablePropertieId" Type="int" Nullable="false" />
+          <Property Name="SclMax" Type="real" Nullable="false" />
+          <Property Name="SclMin" Type="real" Nullable="false" />
+          <Property Name="IsCutOffMax" Type="bit" Nullable="false" />
+          <Property Name="CutOffMax" Type="real" Nullable="false" />
+          <Property Name="IsCutOffMin" Type="bit" Nullable="false" />
+          <Property Name="CutOffMin" Type="real" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MainTables">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlcId" Type="int" Nullable="false" />
+          <Property Name="LabelId" Type="int" Nullable="false" />
+          <Property Name="TitleId" Type="int" Nullable="false" />
+          <Property Name="UnitId" Type="int" Nullable="false" />
+          <Property Name="IdAsc" Type="int" Nullable="false" />
+          <Property Name="IsContainer" Type="bit" Nullable="false" />
+          <Property Name="Container" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsOutOfView" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NumericSamples">
+          <Key>
+            <PropertyRef Name="TagId" />
+            <PropertyRef Name="SampleDateTime" />
+          </Key>
+          <Property Name="TagId" Type="int" Nullable="false" />
+          <Property Name="SampleDateTime" Type="datetime" Nullable="false" />
+          <Property Name="SampleValue" Type="real" Nullable="false" />
+          <Property Name="QualityId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Plcs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="DepName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="IsVisibleInMenu" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Qualities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="Titles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Units">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId">
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="1" />
+          <End Role="MainTableProperties" Type="Self.MainTableProperties" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MainTables">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTableProperties">
+              <PropertyRef Name="MainTablePropertieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Labels_LabelId">
+          <End Role="Labels" Type="Self.Labels" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Labels">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="LabelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Plcs_PlcId">
+          <End Role="Plcs" Type="Self.Plcs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plcs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="PlcId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Titles_TitleId">
+          <End Role="Titles" Type="Self.Titles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Titles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="TitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Units_UnitId">
+          <End Role="Units" Type="Self.Units" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Units">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_NumericSamples_dbo_MainTables_TagId">
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="NumericSamples" Type="Self.NumericSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MainTables">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NumericSamples">
+              <PropertyRef Name="TagId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_NumericSamples_dbo_Qualities_QualityId">
+          <End Role="Qualities" Type="Self.Qualities" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="NumericSamples" Type="Self.NumericSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Qualities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NumericSamples">
+              <PropertyRef Name="QualityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Labels" EntityType="Self.Labels" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainTableProperties" EntityType="Self.MainTableProperties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainTables" EntityType="Self.MainTables" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NumericSamples" EntityType="Self.NumericSamples" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Plcs" EntityType="Self.Plcs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Qualities" EntityType="Self.Qualities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Titles" EntityType="Self.Titles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Units" EntityType="Self.Units" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId" Association="Self.FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId">
+            <End Role="MainTables" EntitySet="MainTables" />
+            <End Role="MainTableProperties" EntitySet="MainTableProperties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Labels_LabelId" Association="Self.FK_dbo_MainTables_dbo_Labels_LabelId">
+            <End Role="Labels" EntitySet="Labels" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Plcs_PlcId" Association="Self.FK_dbo_MainTables_dbo_Plcs_PlcId">
+            <End Role="Plcs" EntitySet="Plcs" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Titles_TitleId" Association="Self.FK_dbo_MainTables_dbo_Titles_TitleId">
+            <End Role="Titles" EntitySet="Titles" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Units_UnitId" Association="Self.FK_dbo_MainTables_dbo_Units_UnitId">
+            <End Role="Units" EntitySet="Units" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_NumericSamples_dbo_MainTables_TagId" Association="Self.FK_dbo_NumericSamples_dbo_MainTables_TagId">
+            <End Role="MainTables" EntitySet="MainTables" />
+            <End Role="NumericSamples" EntitySet="NumericSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_NumericSamples_dbo_Qualities_QualityId" Association="Self.FK_dbo_NumericSamples_dbo_Qualities_QualityId">
+            <End Role="Qualities" EntitySet="Qualities" />
+            <End Role="NumericSamples" EntitySet="NumericSamples" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Labels">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_MainTables_dbo_Labels_LabelId" FromRole="Labels" ToRole="MainTables" />
+        </EntityType>
+        <EntityType Name="MainTableProperties">
+          <Key>
+            <PropertyRef Name="MainTablePropertieId" />
+          </Key>
+          <Property Name="MainTablePropertieId" Type="Int32" Nullable="false" />
+          <Property Name="SclMax" Type="Single" Nullable="false" />
+          <Property Name="SclMin" Type="Single" Nullable="false" />
+          <Property Name="IsCutOffMax" Type="Boolean" Nullable="false" />
+          <Property Name="CutOffMax" Type="Single" Nullable="false" />
+          <Property Name="IsCutOffMin" Type="Boolean" Nullable="false" />
+          <Property Name="CutOffMin" Type="Single" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId" FromRole="MainTableProperties" ToRole="MainTables" />
+        </EntityType>
+        <EntityType Name="MainTables">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlcId" Type="Int32" Nullable="false" />
+          <Property Name="LabelId" Type="Int32" Nullable="false" />
+          <Property Name="TitleId" Type="Int32" Nullable="false" />
+          <Property Name="UnitId" Type="Int32" Nullable="false" />
+          <Property Name="IdAsc" Type="Int32" Nullable="false" />
+          <Property Name="IsContainer" Type="Boolean" Nullable="false" />
+          <Property Name="Container" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsOutOfView" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Labels" Relationship="Self.FK_dbo_MainTables_dbo_Labels_LabelId" FromRole="MainTables" ToRole="Labels" />
+          <NavigationProperty Name="MainTableProperties" Relationship="Self.FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId" FromRole="MainTables" ToRole="MainTableProperties" />
+          <NavigationProperty Name="Plcs" Relationship="Self.FK_dbo_MainTables_dbo_Plcs_PlcId" FromRole="MainTables" ToRole="Plcs" />
+          <NavigationProperty Name="Titles" Relationship="Self.FK_dbo_MainTables_dbo_Titles_TitleId" FromRole="MainTables" ToRole="Titles" />
+          <NavigationProperty Name="Units" Relationship="Self.FK_dbo_MainTables_dbo_Units_UnitId" FromRole="MainTables" ToRole="Units" />
+          <NavigationProperty Name="NumericSamples" Relationship="Self.FK_dbo_NumericSamples_dbo_MainTables_TagId" FromRole="MainTables" ToRole="NumericSamples" />
+        </EntityType>
+        <EntityType Name="NumericSamples">
+          <Key>
+            <PropertyRef Name="TagId" />
+            <PropertyRef Name="SampleDateTime" />
+          </Key>
+          <Property Name="TagId" Type="Int32" Nullable="false" />
+          <Property Name="SampleDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SampleValue" Type="Single" Nullable="false" />
+          <Property Name="QualityId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_NumericSamples_dbo_MainTables_TagId" FromRole="NumericSamples" ToRole="MainTables" />
+          <NavigationProperty Name="Qualities" Relationship="Self.FK_dbo_NumericSamples_dbo_Qualities_QualityId" FromRole="NumericSamples" ToRole="Qualities" />
+        </EntityType>
+        <EntityType Name="Plcs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DepName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsVisibleInMenu" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_MainTables_dbo_Plcs_PlcId" FromRole="Plcs" ToRole="MainTables" />
+        </EntityType>
+        <EntityType Name="Qualities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="NumericSamples" Relationship="Self.FK_dbo_NumericSamples_dbo_Qualities_QualityId" FromRole="Qualities" ToRole="NumericSamples" />
+        </EntityType>
+        <EntityType Name="Titles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_MainTables_dbo_Titles_TitleId" FromRole="Titles" ToRole="MainTables" />
+        </EntityType>
+        <EntityType Name="Units">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="MainTables" Relationship="Self.FK_dbo_MainTables_dbo_Units_UnitId" FromRole="Units" ToRole="MainTables" />
+        </EntityType>
+        <Association Name="FK_dbo_MainTables_dbo_Labels_LabelId">
+          <End Role="Labels" Type="Self.Labels" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Labels">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="LabelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId">
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="1" />
+          <End Role="MainTableProperties" Type="Self.MainTableProperties" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="MainTables">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTableProperties">
+              <PropertyRef Name="MainTablePropertieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Plcs_PlcId">
+          <End Role="Plcs" Type="Self.Plcs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Plcs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="PlcId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Titles_TitleId">
+          <End Role="Titles" Type="Self.Titles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Titles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="TitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_MainTables_dbo_Units_UnitId">
+          <End Role="Units" Type="Self.Units" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Units">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MainTables">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_NumericSamples_dbo_MainTables_TagId">
+          <End Role="MainTables" Type="Self.MainTables" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="NumericSamples" Type="Self.NumericSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MainTables">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NumericSamples">
+              <PropertyRef Name="TagId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_NumericSamples_dbo_Qualities_QualityId">
+          <End Role="Qualities" Type="Self.Qualities" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="NumericSamples" Type="Self.NumericSamples" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Qualities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="NumericSamples">
+              <PropertyRef Name="QualityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Labels" EntityType="Self.Labels" />
+          <EntitySet Name="MainTableProperties" EntityType="Self.MainTableProperties" />
+          <EntitySet Name="MainTables" EntityType="Self.MainTables" />
+          <EntitySet Name="NumericSamples" EntityType="Self.NumericSamples" />
+          <EntitySet Name="Plcs" EntityType="Self.Plcs" />
+          <EntitySet Name="Qualities" EntityType="Self.Qualities" />
+          <EntitySet Name="Titles" EntityType="Self.Titles" />
+          <EntitySet Name="Units" EntityType="Self.Units" />
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Labels_LabelId" Association="Self.FK_dbo_MainTables_dbo_Labels_LabelId">
+            <End Role="Labels" EntitySet="Labels" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId" Association="Self.FK_dbo_MainTableProperties_dbo_MainTables_MainTablePropertieId">
+            <End Role="MainTables" EntitySet="MainTables" />
+            <End Role="MainTableProperties" EntitySet="MainTableProperties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Plcs_PlcId" Association="Self.FK_dbo_MainTables_dbo_Plcs_PlcId">
+            <End Role="Plcs" EntitySet="Plcs" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Titles_TitleId" Association="Self.FK_dbo_MainTables_dbo_Titles_TitleId">
+            <End Role="Titles" EntitySet="Titles" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_MainTables_dbo_Units_UnitId" Association="Self.FK_dbo_MainTables_dbo_Units_UnitId">
+            <End Role="Units" EntitySet="Units" />
+            <End Role="MainTables" EntitySet="MainTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_NumericSamples_dbo_MainTables_TagId" Association="Self.FK_dbo_NumericSamples_dbo_MainTables_TagId">
+            <End Role="MainTables" EntitySet="MainTables" />
+            <End Role="NumericSamples" EntitySet="NumericSamples" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_NumericSamples_dbo_Qualities_QualityId" Association="Self.FK_dbo_NumericSamples_dbo_Qualities_QualityId">
+            <End Role="Qualities" EntitySet="Qualities" />
+            <End Role="NumericSamples" EntitySet="NumericSamples" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Labels">
+            <EntityTypeMapping TypeName="Model.Labels">
+              <MappingFragment StoreEntitySet="Labels">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainTableProperties">
+            <EntityTypeMapping TypeName="Model.MainTableProperties">
+              <MappingFragment StoreEntitySet="MainTableProperties">
+                <ScalarProperty Name="MainTablePropertieId" ColumnName="MainTablePropertieId" />
+                <ScalarProperty Name="SclMax" ColumnName="SclMax" />
+                <ScalarProperty Name="SclMin" ColumnName="SclMin" />
+                <ScalarProperty Name="IsCutOffMax" ColumnName="IsCutOffMax" />
+                <ScalarProperty Name="CutOffMax" ColumnName="CutOffMax" />
+                <ScalarProperty Name="IsCutOffMin" ColumnName="IsCutOffMin" />
+                <ScalarProperty Name="CutOffMin" ColumnName="CutOffMin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainTables">
+            <EntityTypeMapping TypeName="Model.MainTables">
+              <MappingFragment StoreEntitySet="MainTables">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PlcId" ColumnName="PlcId" />
+                <ScalarProperty Name="LabelId" ColumnName="LabelId" />
+                <ScalarProperty Name="TitleId" ColumnName="TitleId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="IdAsc" ColumnName="IdAsc" />
+                <ScalarProperty Name="IsContainer" ColumnName="IsContainer" />
+                <ScalarProperty Name="Container" ColumnName="Container" />
+                <ScalarProperty Name="IsOutOfView" ColumnName="IsOutOfView" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NumericSamples">
+            <EntityTypeMapping TypeName="Model.NumericSamples">
+              <MappingFragment StoreEntitySet="NumericSamples">
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="SampleDateTime" ColumnName="SampleDateTime" />
+                <ScalarProperty Name="SampleValue" ColumnName="SampleValue" />
+                <ScalarProperty Name="QualityId" ColumnName="QualityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Plcs">
+            <EntityTypeMapping TypeName="Model.Plcs">
+              <MappingFragment StoreEntitySet="Plcs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DepName" ColumnName="DepName" />
+                <ScalarProperty Name="IsVisibleInMenu" ColumnName="IsVisibleInMenu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Qualities">
+            <EntityTypeMapping TypeName="Model.Qualities">
+              <MappingFragment StoreEntitySet="Qualities">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Titles">
+            <EntityTypeMapping TypeName="Model.Titles">
+              <MappingFragment StoreEntitySet="Titles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Units">
+            <EntityTypeMapping TypeName="Model.Units">
+              <MappingFragment StoreEntitySet="Units">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

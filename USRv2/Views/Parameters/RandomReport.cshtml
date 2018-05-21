@@ -1,0 +1,304 @@
+﻿@model USRv2.ViewModels.MainTableViewModel
+
+@{
+    ViewBag.Title = "Отчет за период";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <div class="col-sm-10">
+        <h2>Отчет за период</h2> <br><br>
+        @{int i = 0;
+            @:<div id="depCheckboxes">
+            foreach (var names in Model.Plcs)
+            {
+                i++;
+                @:<label class="checkbox-inline">
+                @:<input id="inp-@i" class="js-change" plcId="@names.Id" depName="tr.@names.DepName " type="checkbox" @(names.IsVisibleInMenu == true ? "checked" : "")> @names.Name
+                @:</label>
+            }
+    @:</div>
+    <p id="quantityOfCheckboxes" hidden>@i</p>
+        }
+    </div>
+
+    <div class="col-sm-1 text-center">
+        <label class="big calendar-label">Период с</label>
+        <div class="calendar">
+            <input type="hidden" id="one-datepicker">
+            <div class="sprite40-calendar calendar-icon showDatepicker"></div>
+            <div id="one-week-day" class="week-day">@ViewBag.StartTime</div>
+            <div id="one-day" class="day">@ViewBag.StartDay</div>
+            <div id="one-month-year" class="month-year">@ViewBag.StartMonthYear</div>
+        </div>
+    </div>
+    <div class="col-sm-1 text-center">
+        <label class="big calendar-label">Период по</label>
+        <div class="calendar">
+            <input type="hidden" id="two-datepicker">
+            <div id="activate-calendar" class="sprite40-calendar-white calendar-icon showDatepickerTwo disable-2nd-calendar"></div>
+            <div id="two-week-day" class="week-day">@ViewBag.EndTime</div>
+            <div id="two-day" class="day">@ViewBag.EndDay</div>
+            <div id="two-month-year" class="month-year">@ViewBag.EndMonthYear</div>
+        </div>
+    </div>
+</div>
+
+
+<br>
+<br>
+
+<table id="mainTables" class="table table-bordered table-hover table-condensed">
+    <thead>
+    <tr>
+        <th class="text-center">Параметр</th>
+        <th class="text-center">Среднее</th>
+        <th class="text-center">Суммарное</th>
+        <th class="text-center">Минимум</th>
+        <th class="text-center">Максимум</th>
+    </tr>
+    </thead>
+    <tbody style="display: none">
+    @foreach (var names in Model.MainTables.OrderBy(m => m.IdAsc))
+    {
+        if (!names.IsOutOfView)
+        {
+            if (!names.IsContainer)
+            {
+                <tr class="@names.Plc.DepName for-modal"
+                    data-mainTable-id="@names.Id" 
+                    data-min="@names.MainTablePropertie.SclMin"
+                    data-max="@names.MainTablePropertie.SclMax"
+                    data-cutOffMax="@names.MainTablePropertie.CutOffMax"
+                    data-cutOffMin="@names.MainTablePropertie.CutOffMin">
+                    <td class="col-md-4">@names.Plc.DepName-@names.Label.Name @names.Title.Name, @names.Unit.Name</td>
+                    @foreach (var nameData in Model.NumericSampleRandoms)
+                    {
+                        if (nameData.Id == names.Id) { 
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.AverageRandom)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.SumRandom)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.MinimumRandom)) }</td>
+                            <td class="vert-align text-center">@if (nameData.Id == names.Id) { @Html.Raw(String.Format("{0:#0.##0}", nameData.MaximumRandom)) }</td>
+                        }
+                    }
+                </tr>
+            }
+            else
+            {
+                <tr class="@names.Plc.DepName">
+                    <td colspan="15" class="text-center"><b>@names.Container</b></td>
+                </tr>
+            }
+        }
+    }
+
+    </tbody>
+    
+
+</table>
+
+<!-- Modal hidden -->
+<div id="basicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <div class="modal-title" id="myModalLabel">
+                    <div class="h4 font-arial" id="name-from-tr-row"></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="chartdiv" style="width: 100%; height: 600px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            $("#mainTables").tablesorter();
+
+            // Передача названия параметра в модальное окно по нажатию на любую строку таблицы
+            $("tr.for-modal").on("click", function () {
+                var tr = $(this);
+                var trElement = $(this), timeStart, timeEnd, dayStart, dayEnd, monthYearStart, monthYearEnd, tagId;
+                //  if ($(trElement).children("td:first").text())
+                $("#name-from-tr-row").html($(trElement).children("td:first").text());
+
+                // сборка строки запроса AJAX
+                tagId = tr.attr("data-mainTable-id");
+                timeStart = $("div.week-day:first").text();
+                timeEnd = $("div.week-day:last").text();
+                dayStart = ("0" + $("div.day:first").text()).slice(-2);
+                dayEnd = ("0" + $("div.day:last").text()).slice(-2);
+                monthYearStart = $("div.month-year:first").text();
+                monthYearEnd = $("div.month-year:last").text();
+
+                //очистка переменных старого модального окна при открытии нового модального окна
+                var originalModal = $('#basicModal').clone();
+                $("#basicModal").on("hidden.bs.modal", function () {
+                    $('#basicModal').remove();
+                    var myClone = originalModal.clone();
+                    $('body').append(myClone);
+                });
+
+                // открытие тренда в модальном окне
+                $("#basicModal").modal('show').on('shown.bs.modal',
+                    function () {
+                        AmCharts.makeChart("chartdiv",
+                            {
+                                "type": "serial",
+                                "dataLoader": {
+                                    "url": "/api/ModalTrend/?id=" + tagId + "&dtDateStart=" + dayStart + "." + monthYearStart + "%20" + timeStart + "&dtDateEnd=" + dayEnd + "." + monthYearEnd + "%20" + timeEnd,
+                                    "format": "json"
+                                },
+                                "pathToImages": "/Content/images/",
+                                "graphs": [{
+                                    "bullet": "none",
+                                    "bulletSize": 1,
+                                    "lineColor": "#d1655d",
+                                    "lineThickness": 2,
+                                    "type": "smoothedLine",
+                                    "valueField": "sampleValue"
+                                }],
+                                "chartCursor":
+                                {
+                                    "categoryBalloonDateFormat": "JJ:NN DD.MM.YYYY ",
+                                    "cursorPosition": "mouse"
+                                },
+                                "categoryField": "sampleDateTime",
+                                "categoryAxis": {
+                                    "minPeriod": "mm",
+                                    "parseDates": true
+                                },
+                                "valueAxes": [
+                                    {
+                                        "maximum": tr.attr("data-max"),
+                                        "minimum": tr.attr("data-min")
+                                    }
+                                ],
+                                "guides": [
+                                    {
+                                        "dashLength": 4,
+                                        "fillAlpha": 0.02,
+                                        "value": tr.attr("data-cutOffMin"),
+                                        "toValue": tr.attr("data-cutOffMax"),
+                                        "lineAlpha": 0.8
+
+                                    }
+                                ]
+                            });
+                    });
+            });
+
+            for (var i = 1; i <= $("#quantityOfCheckboxes").text(); i++) {
+                if (!$("#inp-" + i).prop("checked")) {
+                    var rowsToHide = $("tbody").children($("#inp-" + i).attr("depName"));
+                    $(rowsToHide).hide();
+                }
+            }
+            $("tbody").show();
+            var vm = {};
+            var dtDateStart = "", dtDateEnd = "";
+
+            $('#one-datepicker').datepicker({
+                timepicker: true,
+                toggleSelected: false,
+                maxDate: new Date(),
+                onSelect: function(formattedDate, date, inst) {
+                    dtDateStart = "";
+                    dtDateStart = "/Parameters/RandomReport/?dtDateStart=" + formattedDate + ":00";
+
+                    $("#one-month-year").text(inst.parsedDate.fullMonth + "." + inst.parsedDate.year);
+                    $("#one-day").text((inst._prevOnSelectValue.slice(0, 1) == "0")
+                        ? inst._prevOnSelectValue.slice(1, 2)
+                        : inst._prevOnSelectValue.slice(0, 2));
+                    $("#one-week-day").text(("0" + inst.timepicker.hours).slice(-2) + ":" + ("0" + inst.timepicker.minutes).slice(-2) + ":00");
+
+                    if (!$("#one-week-day").hasClass("correction-mode")) {
+                        $("#one-week-day").addClass("correction-mode");
+                        $("#one-day").addClass("correction-mode");
+                        $("#one-month-year").addClass("correction-mode");
+                    }
+                },
+                onHide: function (dp, animationCompleted) {
+                    if (animationCompleted)
+                        if (dtDateStart != "") {
+                            $("#activate-calendar").removeClass("sprite40-calendar-white").addClass("sprite40-calendar");
+                            $("#activate-calendar").removeClass("disable-2nd-calendar");
+                        }
+                }
+            });
+
+            $('#two-datepicker').datepicker({
+                timepicker: true,
+                toggleSelected: false,
+                maxDate: new Date(),
+                onSelect: function(formattedDate, date, inst) {
+                    dtDateEnd = "";
+                    dtDateEnd = "&dtDateEnd=" + formattedDate + ":00";
+
+                    $("#two-month-year").text(inst.parsedDate.fullMonth + "." + inst.parsedDate.year);
+                    $("#two-day").text((inst._prevOnSelectValue.slice(0, 1) == "0")
+                        ? inst._prevOnSelectValue.slice(1, 2)
+                        : inst._prevOnSelectValue.slice(0, 2));
+                    $("#two-week-day").text(("0" + inst.timepicker.hours).slice(-2) + ":" + ("0" + inst.timepicker.minutes).slice(-2) + ":00");
+
+
+                    if (!$("#two-week-day").hasClass("correction-mode")) {
+                        $("#two-week-day").addClass("correction-mode");
+                        $("#two-day").addClass("correction-mode");
+                        $("#two-month-year").addClass("correction-mode");
+                    }
+                },
+                onHide: function (dp, animationCompleted) {
+                    if (animationCompleted)
+                        if (dtDateEnd != "")
+                        window.location = dtDateStart + dtDateEnd;
+                }
+            });
+
+            var dp = $('#one-datepicker').datepicker().data('datepicker');
+            var dp2 = $('#two-datepicker').datepicker().data('datepicker');
+
+            $(".showDatepicker").on("click",
+                function() {
+                    dp.show();
+                });
+            $(".showDatepickerTwo").on("click",
+                function() {
+                    dp2.show();
+                });
+
+            $("#depCheckboxes").on("click",
+                ".js-change",
+                function() {
+                    var input = $(this);
+                    var hz = $("tbody").children(input.attr("depName"));
+                    vm =
+                    {
+                        IsVisibleInMenu: input.prop("checked")
+                    }; // запись вайл или тру в зависимости от состояние переключателдя
+
+                    $.ajax({
+                        url: "/api/plcs/" + input.attr("plcId"),
+                        method: "PUT",
+                        data: vm,
+                        success: function() {
+                            $(hz).toggle();
+                        }
+                    });
+
+
+                });
+
+
+        });
+
+    </script>
+    }

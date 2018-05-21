@@ -20,6 +20,24 @@ namespace USRv2.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public DbSet<MainTable> MainTables { get; set; }
+
+        public DbSet<NumericSamples> NumericSampleses { get; set; }
+
+        public DbSet<MainTablePropertie> MainTableProperties { get; set; }
+
+        public DbSet<Plc> Plcs { get; set; }
+
+        public DbSet<Unit> Units { get; set; }
+
+        public DbSet<Label> Labels { get; set; }
+
+        public DbSet<Title> Titles { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Singer> Singers { get; set; }
+
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

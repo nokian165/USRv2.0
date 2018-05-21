@@ -1,0 +1,70 @@
+﻿@model IEnumerable<USRv2.Models.Plc>
+
+@{
+    ViewBag.Title = "Отделения";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Перечень используемых отделений</h2>
+
+@using (Html.BeginForm("PlcNew", "Parameters"))
+{
+    <button class="btn btn-warning">Добавить</button>
+
+}<br />
+
+<table id="plcs" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">Отделение</th>
+            <th class="text-center">Метка отделения</th>
+          @*  <th class="text-center">Состояние переключателя в меню</th>*@
+            <th class="text-center">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Names in Model)
+        {
+            <tr>
+                <td class="vert-align text-center">@Names.Name</td>
+                <td class="vert-align text-center">@Names.DepName</td>
+               @* <td class="vert-align text-center">@(Names.IsVisibleInMenu == true ? "Включен" : "Отключен")</td>*@
+                <td class="text-center">
+                    @Html.ActionLink("Изменить", "PlcEdit", "Parameters", new { id = Names.Id }, new { @class = "btn btn-info btn-xs" })
+                    <button class='btn btn-primary btn-xs js-delete' data-plc-id="@Names.Id" name-plc-id="@Names.Name">Удалить</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#plcs").on("click", ".js-delete", function () {
+                var button = $(this);
+                // console.log(button);
+                bootbox.confirm("Вы действительно хотите удалить отделение '" + button.attr("name-plc-id") + "'?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/plcs/" + button.attr("data-plc-id"),
+                            method: "DELETE",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Удалено");
+                                //button.parents("tr").remove();  http://datatables.net
+                            },
+                            error: function () {
+                                toastr.error("Вы не можете удалить отделение '" + button.attr("name-plc-id") + "', т.к. оно используется в Главной таблице!");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

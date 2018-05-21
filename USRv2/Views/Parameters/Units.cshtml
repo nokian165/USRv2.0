@@ -1,0 +1,67 @@
+﻿@model IEnumerable<USRv2.Models.Unit>
+
+@{
+    ViewBag.Title = "Ед.изм.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Перечень используемых единиц измерения</h2>
+
+@using (Html.BeginForm("UnitNew", "Parameters"))
+{
+    <button class="btn btn-warning">Добавить</button>
+
+}<br />
+
+<table id="units" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-center">Единица измерения</th>
+            <th class="text-center">Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Names in Model)
+        {
+            <tr>
+                <td class="vert-align text-center">@Names.Name</td>
+                <td class="text-center">
+                    @Html.ActionLink("Изменить", "UnitEdit", "Parameters", new { id = Names.Id }, new { @class = "btn btn-info btn-xs" })
+                    <button class='btn btn-primary btn-xs js-delete' data-unit-id="@Names.Id" name-unit-id="@Names.Name">Удалить</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#units").on("click", ".js-delete", function () {
+                var button = $(this);
+                // console.log(button);
+                bootbox.confirm("Вы действительно хотите удалить ед.изм. '" + button.attr("name-unit-id") + "'?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/units/" + button.attr("data-unit-id"),
+                            method: "DELETE",
+                            success: function () {
+                                button.parents("tr").remove();
+                                toastr.success("Удалено");
+                                //button.parents("tr").remove();  http://datatables.net
+                            },
+                            error: function () {
+                                toastr.error("Вы не можете удалить ед.изм. '" + button.attr("name-unit-id") + "', т.к. она используется в Главной таблице!");
+                            }
+                          
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

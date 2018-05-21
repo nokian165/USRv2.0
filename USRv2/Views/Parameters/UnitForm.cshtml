@@ -1,0 +1,28 @@
+﻿@model USRv2.Models.Unit
+@{
+    ViewBag.Title = "UnitForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id != 0 ? "Редактирование существующей единицы измерения" : "Добавление новой единицы измерения")</h2>
+
+
+
+@using (Html.BeginForm("UnitSave", "Parameters"))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name) 
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+    }
+
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

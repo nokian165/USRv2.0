@@ -1,0 +1,76 @@
+﻿@model IEnumerable<USRv2.Models.Label>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<button id='js-delete'>Удалить</button>
+
+<table id="labels" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-left">Список входящих сообщений</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Names in Model)
+        {
+            <tr>
+
+                <td class="vert-align text-left">
+                    <input id="@Names.Id" class="js-change" type="checkbox">
+                    @Names.Name
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+
+            var vm = {
+                rowsIds: []
+            }
+
+            $("#labels").on("click",
+                ".js-change",
+                function() {
+                    var input = $(this);
+                    vm.rowsIds.push(input.attr('id'));
+                    input.parent().parent().addClass("for-hide");
+                });
+
+
+            $("#js-delete").on("click",
+                
+                function() {
+                    var button = $(this);
+                    // console.log(button);
+                    bootbox.confirm("Вы действительно хотите удалить выбранные сообщения?",
+                        function(result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/labels",
+                                    method: "POST",
+                                    data: vm,
+                                    success: function () {
+                                        $("tr.for-hide").remove();
+
+
+                                        vm = {
+                                            rowsIds: []
+                                        }
+                                    }
+                                });
+
+
+                            }
+                        });
+                });
+        });
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿@model USRv2.Models.Title
+@{
+    ViewBag.Title = "TitleForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@(Model.Id != 0 ? "Редактирование существующего названия параметра" : "Добавление нового названия параметра")</h2>
+
+
+
+@using (Html.BeginForm("TitleSave", "Parameters"))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name) 
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+    }
+
+    @section scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
